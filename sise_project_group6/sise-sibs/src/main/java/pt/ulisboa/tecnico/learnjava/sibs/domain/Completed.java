@@ -16,7 +16,7 @@ public class Completed extends State {
 
 	@Override
 	public void cancel(TransferOperation transfer, Sibs sibs) throws StateException {
-
+//		throw new StateException();
 	}
 
 }

@@ -35,11 +35,13 @@ public class Interface {
 		bank2.createAccount(AccountType.CHECKING, client3, 10000, 1000); // Iban CTTCK3
 		MbwayAccount mbway;
 
+		// TODO Auto-generated method stub
 		while (true) {
 			Scanner input = new Scanner(new BufferedInputStream(System.in));
 			String linha = input.nextLine();
 			String str[] = linha.split(" ");
 			String comando = str[0];
+//			System.out.println(linha);
 
 			switch (comando) {
 			case "exit":
@@ -47,7 +49,7 @@ public class Interface {
 			case "associate-mbway":
 				String iban = str[1];
 				String phoneNumber = str[2];
-
+//				System.out.println("Iban: " + iban + " phone number: " + phoneNumber);
 				try {
 					mbway = new MbwayAccount(phoneNumber, iban, service);
 				} catch (AccountException e) {
@@ -57,7 +59,7 @@ public class Interface {
 
 				Random rand = new Random();
 				Integer code = 1000000 + rand.nextInt(8999999);
-
+//				int code = 0000;
 				mbway.setCode(code);
 				System.out.println("Code: " + code + " (Dont share it with anyone)");
 				break;
@@ -65,7 +67,7 @@ public class Interface {
 				String phone = str[1];
 				int cod = Integer.parseInt(str[2]);
 				MbwayAccount mb = MbWay.getAccount(phone);
-
+//				System.out.println(mb.getCode());
 				if (mb.getCode().equals(cod)) {
 					mb.setState(true);
 					System.out.println("MBWay association confirmed successfully!");
@@ -163,5 +165,9 @@ public class Interface {
 
 		}
 	}
+
+//	static boolean notEnoughMoney(String number, String amount) throws NumberFormatException, MbWayException {
+//		return service.getAccountByIban((MbWay.getAccount(number).getIban())).getBalance() < Integer.parseInt(amount);
+//	}
 
 }
