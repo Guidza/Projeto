@@ -37,9 +37,7 @@ public class Interface {
 
 		// TODO Auto-generated method stub
 		while (true) {
-			Scanner input = new Scanner(new BufferedInputStream(System.in));
-			String linha = input.nextLine();
-			String str[] = linha.split(" ");
+			String str[] = lerInput();
 			String comando = str[0];
 
 			switch (comando) {
@@ -49,10 +47,8 @@ public class Interface {
 				String iban = str[1];
 				String phoneNumber = str[2];
 
-				try {
-					mbway = new MbwayAccount(phoneNumber, iban, service);
-				} catch (AccountException e) {
-					System.out.println("No account with such IBAN");
+				mbway = createMbWay(phoneNumber, iban, service);
+				if (mbway == null) {
 					break;
 				}
 
@@ -110,9 +106,7 @@ public class Interface {
 				int friendsAmount = 0;
 				int i = 0;
 				while (o == true) {
-					Scanner friend = new Scanner(new BufferedInputStream(System.in));
-					String line = friend.nextLine();
-					String str1[] = line.split(" ");
+					String str1[] = Interface.lerInput();
 					String comand = str1[0];
 					if (comand.equals("friend")) {
 						try {
@@ -163,6 +157,24 @@ public class Interface {
 			}
 
 		}
+	}
+
+	public static String[] lerInput() {
+		Scanner input = new Scanner(new BufferedInputStream(System.in));
+		String linha = input.nextLine();
+		String str[] = linha.split(" ");
+		return str;
+	}
+
+	public static MbwayAccount createMbWay(String phoneNumber, String iban, Services service) {
+		try {
+			MbwayAccount mb = new MbwayAccount(phoneNumber, iban, service);
+			return mb;
+		} catch (AccountException e) {
+			System.out.println("No account with such IBAN");
+			return null;
+		}
+
 	}
 
 }
