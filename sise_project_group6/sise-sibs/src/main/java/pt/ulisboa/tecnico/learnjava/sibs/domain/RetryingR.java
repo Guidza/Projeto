@@ -4,17 +4,18 @@ import pt.ulisboa.tecnico.learnjava.bank.exceptions.AccountException;
 
 public class RetryingR extends State {
 	private int count;
+	public State prevState;
 
-	public RetryingR() {
+	public RetryingR(State state) {
 		super();
 		count = 3;
+		this.prevState = state;
 	}
 
 	@Override
 	public void process(TransferOperation transfer, Sibs sibs) throws AccountException {
 		try {
-			sibs.services.withdraw(transfer.getSourceIban(), transfer.getValue());
-			transfer.setState(new Withdrawn());
+			prevState.success(transfer, sibs);
 		} catch (AccountException e) {
 			if (count != 0) {
 				count--;
@@ -22,8 +23,7 @@ public class RetryingR extends State {
 			}
 
 			else {
-				transfer.setState(new ErrorState());
-				sibs.removeUnprocessedOp();
+				prevState.errorState(transfer, sibs);
 			}
 		}
 	}
@@ -38,4 +38,12 @@ public class RetryingR extends State {
 	public int getCount() {
 		return count;
 	}
+
+	@Override
+	public void success(TransferOperation transfer, Sibs sibs) {
+		if (prevState instanceof Registered) {
+
+		}
+	}
+
 }

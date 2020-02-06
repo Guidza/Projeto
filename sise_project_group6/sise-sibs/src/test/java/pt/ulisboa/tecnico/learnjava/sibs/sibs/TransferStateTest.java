@@ -13,9 +13,7 @@ import pt.ulisboa.tecnico.learnjava.sibs.domain.Canceled;
 import pt.ulisboa.tecnico.learnjava.sibs.domain.Completed;
 import pt.ulisboa.tecnico.learnjava.sibs.domain.Deposited;
 import pt.ulisboa.tecnico.learnjava.sibs.domain.Registered;
-import pt.ulisboa.tecnico.learnjava.sibs.domain.RetryingD;
 import pt.ulisboa.tecnico.learnjava.sibs.domain.RetryingR;
-import pt.ulisboa.tecnico.learnjava.sibs.domain.RetryingW;
 import pt.ulisboa.tecnico.learnjava.sibs.domain.Sibs;
 import pt.ulisboa.tecnico.learnjava.sibs.domain.TransferOperation;
 import pt.ulisboa.tecnico.learnjava.sibs.domain.Withdrawn;
@@ -74,7 +72,7 @@ public class TransferStateTest {
 		doThrow(new AccountException()).when(service).deposit("987654332", 100);
 		transfer.getState().process(transfer, sibs);
 		verify(service, never()).deposit("123456789", 100);
-		assert (transfer.getState() instanceof RetryingW);
+		assert (transfer.getState() instanceof RetryingR);
 	}
 
 	@Test
@@ -109,7 +107,7 @@ public class TransferStateTest {
 		transfer.getState().process(transfer, sibs);
 		verify(service, never()).deposit("CGDCK1", 100);
 		verify(service, never()).withdraw("BPICK2", 100);
-		assert (transfer.getState() instanceof RetryingD);
+		assert (transfer.getState() instanceof RetryingR);
 	}
 
 	@Test

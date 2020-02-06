@@ -11,10 +11,9 @@ public class Registered extends State {
 	@Override
 	public void process(TransferOperation transfer, Sibs sibs) throws AccountException {
 		try {
-			sibs.services.withdraw(transfer.getSourceIban(), transfer.getValue());
-			transfer.setState(new Withdrawn());
+			success(transfer, sibs);
 		} catch (AccountException e) {
-			transfer.setState(new RetryingR());
+			transfer.setState(new RetryingR(new Registered()));
 
 		}
 
@@ -24,5 +23,17 @@ public class Registered extends State {
 	public void cancel(TransferOperation transfer, Sibs sibs) {
 		transfer.setState(new Canceled());
 		sibs.removeUnprocessedOp();
+	}
+
+	@Override
+	public void errorState(TransferOperation transfer, Sibs sibs) {
+		transfer.setState(new ErrorState());
+		sibs.removeUnprocessedOp();
+	}
+
+	@Override
+	public void success(TransferOperation transfer, Sibs sibs) throws AccountException {
+		sibs.services.withdraw(transfer.getSourceIban(), transfer.getValue());
+		transfer.setState(new Withdrawn());
 	}
 }

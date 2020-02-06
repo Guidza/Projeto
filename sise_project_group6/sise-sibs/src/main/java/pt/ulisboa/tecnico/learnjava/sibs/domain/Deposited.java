@@ -12,11 +12,9 @@ public class Deposited extends State {
 	@Override
 	public void process(TransferOperation transfer, Sibs sibs) throws AccountException {
 		try {
-			sibs.services.withdraw(transfer.getSourceIban(), transfer.commission());
-			transfer.setState(new Completed());
-			sibs.removeUnprocessedOp();
+			success(transfer, sibs);
 		} catch (AccountException e) {
-			transfer.setState(new RetryingD());
+			transfer.setState(new RetryingR(transfer.getState()));
 		}
 	}
 
@@ -26,6 +24,21 @@ public class Deposited extends State {
 		sibs.services.deposit(transfer.getSourceIban(), transfer.getValue());
 		transfer.setState(new Canceled());
 		sibs.removeUnprocessedOp();
+	}
+
+	public void errorState(TransferOperation transfer, Sibs sibs) throws AccountException {
+		transfer.setState(new ErrorState());
+		sibs.services.withdraw(transfer.getTargetIban(), transfer.getValue());
+		sibs.services.deposit(transfer.getSourceIban(), transfer.getValue());
+		sibs.removeUnprocessedOp();
+
+	}
+
+	public void success(TransferOperation transfer, Sibs sibs) throws AccountException {
+		sibs.services.withdraw(transfer.getSourceIban(), transfer.commission());
+		transfer.setState(new Completed());
+		sibs.removeUnprocessedOp();
+
 	}
 
 }
