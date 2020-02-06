@@ -30,19 +30,10 @@ public class Sibs {
 		if (services.getAccountByIban(targetIban) == null || services.getAccountByIban(sourceIban) == null) {
 			throw new AccountException();
 		}
-//		} else if (services.getAccountByIban(sourceIban).getBalance() < amount) {
-//			throw new AccountException();
-//		}
-//		this.services.withdraw(sourceIban, amount);
-//		this.services.deposit(targetIban, amount);
 
 		int position = addOperation(Operation.OPERATION_TRANSFER, sourceIban, targetIban, amount);
 		TransferOperation op = (TransferOperation) this.getOperation(position);
 		unprocessedOp.add(op);
-//		if (!targetIban.substring(0, 3).equals(sourceIban.substring(0, 3))) {
-//			Operation operation = this.getOperation(position);
-//			this.services.withdraw(sourceIban, operation.commission());
-//		}
 
 	}
 
